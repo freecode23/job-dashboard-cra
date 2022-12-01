@@ -14,7 +14,7 @@ services:
       - MYSQL_PORT=3306
       - MYSQL_PASSWORD=pass123
       - MYSQL_USER=user
-      - SERP_API=nodeapi
+      - SERP_API=a805feee4648f0f0d0357d8ae9a365f3887d62a5ff3cbe901b75ec5bc10d69eb
     volumes:
       - /app/node_modules
       - ./server:/app
@@ -26,7 +26,7 @@ services:
       dockerfile: Dockerfile
       context: ./client
       args:
-        - REACT_APP_GOOGLE_API=reactapi
+        - REACT_APP_GOOGLE_API=AIzaSyBkXfBuW-KEHGMLXaIC_nVMTDOl3ZZxgps
     volumes:
       - /app/node_modules
       - ./client:/app

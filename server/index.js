@@ -7,15 +7,9 @@ const app = express()
 app.use(cors())
 
 console.log("backend env=", process.env.SERP_API);
-app.get('/', (req, res) => {
-    // access from browser on http://localhost:3050/api/
-    res.send('Hi There')
-});
 
-app.get('/values', (req, res) => {
-    // access from browser on http://localhost:3050/api/values
-    res.send('This is a value')
-});
+const jobsRoute = require("./routes/jobs");
+app.use("/jobs", jobsRoute);
 
 
 const PORT_CONTAINER = 3001
