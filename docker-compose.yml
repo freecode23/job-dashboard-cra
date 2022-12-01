@@ -1,0 +1,67 @@
+version: '3'
+services:
+  # A. API / SERVER
+  api:
+    # 1. use this dockerfile
+    build:
+      dockerfile: Dockerfile
+      context: ./server
+    restart: always  
+
+    # 2. the env variable we will inject to the source code when creating pool
+    environment:
+      - MYSQL_HOST=sql
+      - MYSQL_PORT=3306
+      - MYSQL_PASSWORD=pass123
+      - MYSQL_USER=user
+      - SERP_API=nodeapi
+    volumes:
+      - /app/node_modules
+      - ./server:/app
+
+  # B. CLIENT
+  client:
+    stdin_open: true
+    build:
+      dockerfile: Dockerfile
+      context: ./client
+      args:
+        - REACT_APP_GOOGLE_API=reactapi
+    volumes:
+      - /app/node_modules
+      - ./client:/app
+    environment:
+      - WDS_SOCKET_PORT=0
+    
+
+  # C. NGINX
+  nginx:
+    depends_on:
+      - api
+      - client
+    restart: always
+    build:
+      dockerfile: Dockerfile
+      context: ./nginx
+    ports:
+      - '3050:80'
+
+  # D. DB
+  sql:
+    # get image from docker hub
+    image: mysql
+    restart: always
+    environment:
+      # variables we will need for SQL in the container
+      - MYSQL_USER=user
+      - MYSQL_DATABASE=jobsdb
+      - MYSQL_PASSWORD=pass123
+      - MYSQL_ROOT_PASSWORD=pass123
+    volumes:
+        - mysql-jobsdb-volume:/var/lib/mysql
+
+# volume name in docker host (local machine) to persist data
+volumes:
+  mysql-jobsdb-volume:
+  
+
